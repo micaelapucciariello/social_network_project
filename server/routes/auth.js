@@ -21,7 +21,7 @@ router.post("/signup", (req, res) => {
     bcrypt.hash(password, 15).then((hashedPassword) => {
       const user = new User({
         email,
-        password:hashedPassword,
+        password: hashedPassword,
         name,
       });
 
@@ -34,6 +34,31 @@ router.post("/signup", (req, res) => {
           console.log(err);
         });
     });
+  });
+});
+
+router.post("/signin", (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    res.status(422).json({ error: "missing data" });
+  }
+  User.findOne({ email: email }).then((savedUser) => {
+    if (!savedUser) {
+      res.status(422).json({ error: "invalid email or password" });
+    }
+
+    bcrypt
+      .compare(password, savedUser.password)
+      .then((doMatch) => {
+        if (doMatch) {
+          res.json({ message: "succesfully signed in!" });
+        } else {
+          res.json({ error: "invalid email" });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   });
 });
 

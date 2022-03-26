@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const requireLogin = require("../middleware/requireLogin");
-const Post = mongoose.model("Post");
+const Post = mongoose.model("Post")
 
 router.post("/createpost", requireLogin, (req, res) => {
   const { title, body } = req.body;
